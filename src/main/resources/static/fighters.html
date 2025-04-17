@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="ufcManager" ng-controller="fightersController">
+<head>
+    <meta charset="UTF-8">
+    <title>UFC Manager – Fighters</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ngStorage/0.3.11/ngStorage.min.js"></script>
+    <script src="js/fightersController.js"></script>
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">UFC MANAGER</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+                <li class="nav-item"> <a class="nav-link active" ng-href="{{isManager() || isAdmin() || isGuest() ?
+                    'fighters.html' : 'access-denied.html'}}">Fighters</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" ng-href="{{isManager() || isAdmin() || isGuest() ?
+                    'tournaments.html' : 'access-denied.html'}}">Tournaments</a>
+                </li>
+                <li class="nav-item"><a class="nav-link" ng-href="{{isManager() || isAdmin() || isGuest() ?
+                    'ratings.html' : 'access-denied.html'}}">Rankings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" ng-href="{{isAdmin() ? 'admin.html' : 'access-denied.html'}}">Admin panel</a></li>
+                <li class="nav-item" ng-if="username && role"><a class="nav-link" href="#" ng-click="logout()">Log out</a></li>
+                <li class="nav-item" ng-if="!username || !role"><a class="nav-link" href="login.html">Login</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="container container-narrow">
+
+<!--    СПИСОК БОЙЦОВ -->
+    <div ng-show="mode==='list'">
+
+        <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+            <h4>Fighters</h4>
+            <button class="btn btn-ufc" ng-if="isAdmin() || isManager()" ng-click="addFighter()">+ Add Fighter</button>
+        </div>
+
+          <!-- Фильтры -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label>Weight class:</label>
+                <select class="form-select" ng-model="selectedWeightClass">
+                    <option value="All">All</option>
+                    <option ng-repeat="w in weightClasses">{{w}}</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label>Status:</label>
+                <select class="form-select" ng-model="onlyActive">
+                    <option value="">All</option>
+                    <option value="true">Active</option>
+                    <option value="false">Released</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Таблица -->
+        <table class="table table-bordered">
+            <thead class="table-light">
+            <tr>
+                <th>Name</th>
+                <th>Country</th>
+                <th>UFC Record</th>
+                <th>MMA Record</th>
+                <th>Status</th>
+                <th ng-if="isAdmin() || isManager()">Actions</th>
+            </tr>
+            </thead>
+
+            <tbody ng-repeat="(wClass, list) in filtered">
+            <tr class="table-secondary fw-bold"><td colspan="6">{{wClass}}</td></tr>
+            <tr ng-repeat="f in list">
+                <td>{{f.name}}</td><td>{{f.country||'-'}}</td><td>{{f.ufcRecord||'-'}}</td>
+                <td>{{f.mmaRecord||'-'}}</td><td>{{f.status}}</td>
+                <td ng-if="isAdmin() || isManager()">
+                    <button class="btn btn-sm btn-outline-secondary btn-icon" ng-click="editFighter(f)">
+                        <i class="bi bi-pencil text-dark opacity-100"></i></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--форма редактирования-->
+    <div ng-show="mode==='edit'" class="container-narrow">
+        <h2 class="text-center mb-4">Add / Edit Fighter</h2>
+
+        <form novalidate>
+            <div class="mb-3">
+                <label class="form-label">Name:</label>
+                <input class="form-control" ng-model="fighter.name" required>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Country:</label>
+                <input class="form-control" ng-model="fighter.country">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Weight Class:</label>
+                <input class="form-control" ng-model="fighter.weightClass">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">UFC Record:</label>
+                <input class="form-control" ng-model="fighter.ufcRecord" placeholder="e.g. 14‑0">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">MMA Record:</label>
+                <input class="form-control" ng-model="fighter.mmaRecord" placeholder="e.g. 21‑3">
+            </div>
+            <div class="form-check mb-4">
+                <input class="form-check-input" type="checkbox"
+                     ng-model="fighter.status" ng-true-value="'Active'" ng-false-value="'Released'">
+                <label class="form-check-label">Active</label>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button type="button" class="btn btn-dark" ng-click="saveFighter()">Save</button>
+                <button type="button" class="btn btn-outline-danger" ng-if="fighter.id" ng-click="deleteFighter()">
+                    🗑 Delete</button>
+                <button type="button" class="btn btn-outline-secondary" ng-click="cancelEdit()">← Back</button>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
