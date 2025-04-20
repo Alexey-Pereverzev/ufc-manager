@@ -62,16 +62,15 @@ public class JwtTokenUtil {
         return getAllClaimsFromToken(token).get("roles", List.class);
     }
 
-    public boolean validateJwtToken(String authToken) {
+    public String validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(authToken);
-            return true;
+            return "";
         } catch (JwtException | IllegalArgumentException e) {
-            // here we can optionally log or handle specific exception
-            return false;
+            return e.getMessage();
         }
     }
 }
