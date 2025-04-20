@@ -1,5 +1,14 @@
-angular.module('ufcManager', [])
-  .controller('eventController', function($scope, $http) {
+angular.module('ufcManager')
+  .controller('eventController', function($scope, $http, authService) {
+
+
+
+    authService.initUser($scope);
+
+    $scope.logout = function () {
+      authService.clearUser($scope);
+      window.location.href = 'login.html';
+    };
 
     $scope.mode = 'list';  // list | edit | fightEdit | view
 
@@ -129,21 +138,6 @@ angular.module('ufcManager', [])
 
     };
 
-
-
-    $scope.deleteTournament = () => {
-        if (confirm('Delete "' + $scope.tournament.name + '" ?')) {
-            $scope.tournaments = $scope.tournaments.filter(t => t.id !== $scope.tournament.id);
-            $scope.cancelEdit();
-        }
-        // $http.delete(`/api/tournaments/${$scope.tournament.id}`)
-        //   .then(() => {
-        //     $scope.tournaments = $scope.tournaments.filter(t => t.id !== $scope.tournament.id);
-        //     $scope.cancelEdit();
-        //   })
-        //   .catch(err => console.error("Error deleting tournament:", err));
-    };
-
     $scope.cancelEdit = () => {
       $scope.tournament = {};
       $scope.fight = {};
@@ -158,10 +152,10 @@ angular.module('ufcManager', [])
     // Fight card methods
     $scope.addFight = () => {
       $scope.fight = {
-        id: Date.now(),  // 🆕 уникальный ID сразу
+        id: Date.now(),
         fighter1: '',
         fighter2: '',
-        result: 'vs.',
+        result: '',            // ← пустой результат
         weightClass: $scope.weightClasses[0]
       };
       $scope.mode = 'fightEdit';
@@ -215,9 +209,5 @@ angular.module('ufcManager', [])
       $scope.mode = 'edit'; // ⬅️ Вернуться обратно
     };
 
-    $scope.logout = () => {
-      $scope.username = '';
-      $scope.role = '';
-    };
 
   });

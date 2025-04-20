@@ -1,21 +1,19 @@
-angular.module('ufcManager', ['ngStorage'])
-  .controller('mainController', function($scope, $localStorage, $http) {
+angular.module('ufcManager')
+  .controller('mainController', function($scope, $localStorage, $http, authService) {
     console.log("mainController loaded");
 
-    if ($localStorage.ufcUser && $localStorage.ufcUser.token) {
-      $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.ufcUser.token;
-      $scope.username = $localStorage.ufcUser.username;
-      $scope.userRole = $localStorage.ufcUser.role;
-    } else {
-      $scope.username = 'Guest';
-      $scope.userRole = 'GUEST';
-    }
+    authService.initUser($scope);
 
     $scope.logout = function () {
-      delete $localStorage.ufcUser;
-      $http.defaults.headers.common.Authorization = '';
+      authService.clearUser($scope);
       window.location.href = 'login.html';
     };
+
+    $scope.isAdmin   = () => $scope.role === 'ADMIN';
+    $scope.isManager = () => $scope.role === 'MANAGER';
+    $scope.isGuest   = () => !$scope.role || $scope.role === 'GUEST';
+
+//    $scope.role = 'ADMIN';
 
     // =============================
     // Mock data for now (until backend is implemented)
@@ -49,7 +47,7 @@ angular.module('ufcManager', ['ngStorage'])
     // Real API fetch (commented until backend is ready)
     // =============================
 
-    // $http.get('/api/public/rankings/p4p')
+    // $http.get('/api/rankings/p4p')
     //   .then(function(response) {
     //     $scope.topP4P = response.data.slice(0, 10); // or all, depending on endpoint
     //   })
@@ -57,7 +55,7 @@ angular.module('ufcManager', ['ngStorage'])
     //     console.error("Error fetching top P4P data:", error);
     //   });
 
-    // $http.get('/api/public/tournaments/upcoming')
+    // $http.get('/api/tournaments/upcoming')
     //   .then(function(response) {
     //     $scope.upcomingTournaments = response.data.slice(0, 5);
     //   })

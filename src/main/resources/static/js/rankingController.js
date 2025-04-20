@@ -1,6 +1,12 @@
-angular.module('ufcManager', [])
-  .controller('rankingController', function($scope) {
+angular.module('ufcManager')
+  .controller('rankingController', function($scope, authService) {
 
+    authService.initUser($scope);
+
+    $scope.logout = function () {
+      authService.clearUser($scope);
+      window.location.href = 'login.html';
+    };
 
     $scope.username = 'john_doe'; // example
     $scope.role = 'MANAGER';      // GUEST | MANAGER | ADMIN
