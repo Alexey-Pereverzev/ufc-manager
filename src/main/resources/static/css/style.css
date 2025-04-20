@@ -1,0 +1,106 @@
+/* Общие настройки */
+body {
+  background-color: #f8f9fa;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.container-narrow {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.section-title {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.navbar-brand {
+  margin-left: 1.5rem;
+}
+
+.nav-link.active {
+  font-weight: bold;
+  color: #dc3545 !important;
+}
+
+/* Кнопки */
+.btn-ufc {
+  background-color: #dc3545;
+  color: #fff;
+}
+.btn-ufc:hover {
+  background-color: #bb2d3b;
+}
+
+.btn-outline-ufc {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+.btn-outline-ufc:hover {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* Таблицы */
+table td, table th {
+  vertical-align: middle;
+  text-align: center;
+}
+
+/* Специально для формы входа, регистрации и доступа */
+.form-box {
+  max-width: 400px;
+  margin: 4rem auto;
+  padding: 2rem;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  background: white;
+}
+
+.form-box h4 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+/* Access Denied */
+.access-denied-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  padding: 1rem;
+}
+
+.card.access-denied {
+  max-width: 500px;
+  width: 100%;
+}
+.card.access-denied .card-header {
+  background-color: #dc3545;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Ссылки */
+.btn-link-custom {
+  color: #6c757d;
+}
+.btn-link-custom:hover {
+  text-decoration: underline;
+  color: #343a40;
+}
