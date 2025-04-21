@@ -20,25 +20,33 @@ angular.module('ufcManager')
     $scope.selectedClass = '';
     $scope.rankings = {};
 
-      /* ======== HTTP-запросы (заранее закомментированы) ======== */
+    /* ======== HTTP-запросы (закомментированы для примера) ======== */
 
-      // 1. Получить список весовых категорий
-      /*
-      $http.get('/api/weight-classes').then(function(response) {
-        $scope.weightClasses = response.data;
-        $scope.selectedClass = $scope.weightClasses[0];
-      });
-      */
+    // Загрузка всех весовых категорий + добавление виртуальных категорий
+    // $http.get('/api/weight-classes').then(function(response) {
+    //   $scope.weightClasses = response.data;
+    //   // Добавляем спецкатегории вручную
+    //   $scope.weightClasses.unshift(          // add to the top of the list
+    //     { name: "All" },
+    //     { name: "Women's P4P" },
+    //     { name: "Men's P4P" }
+    //   );
+    //   $scope.selectedClass = $scope.weightClasses[0]; // по умолчанию первая
+    // }).catch(function(error) {
+    //   console.error("Error fetching weight classes:", error);
+    // });
 
-      // 2. Получить рейтинги по выбранной категории
-      /*
-      $scope.loadRankings = function() {
-        $http.get('/api/rankings?category=' + encodeURIComponent($scope.selectedClass))
-             .then(function(response) {
-               $scope.rankings[$scope.selectedClass] = response.data;
-             });
-      };
-      */
+    // Загрузка рейтингов по выбранной категории
+    // $scope.loadRankings = function() {
+    //   const category = encodeURIComponent($scope.selectedClass);
+    //   $http.get('/api/rankings?category=' + category)
+    //     .then(function(response) {
+    //       $scope.rankings[$scope.selectedClass] = response.data;
+    //     })
+    //     .catch(function(error) {
+    //       console.error("Error fetching rankings:", error);
+    //     });
+    // };
 
     // Весовые категории
     $scope.weightClasses = [

@@ -1,7 +1,6 @@
 package org.example.exceptions;
-import javax.xml.bind.ValidationException;
 
-public class InputDataErrorException extends ValidationException {
+public class InputDataErrorException extends RuntimeException {
     public InputDataErrorException(String validationMessage) {
         super(validationMessage);
     }

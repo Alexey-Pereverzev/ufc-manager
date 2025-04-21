@@ -114,4 +114,5 @@ public class FighterService {
     public List<FighterDto> getAll() {
         return fighterRepository.findAll().stream().map(this::toDto).toList();
     }
+
 }

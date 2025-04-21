@@ -7,7 +7,6 @@ import org.example.entity.*;
 import org.example.exceptions.InputDataErrorException;
 import org.example.exceptions.ResourceNotFoundException;
 import org.example.repository.*;
-import org.example.util.FightUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -156,34 +155,52 @@ public class TournamentService {
         double secondRank = FightUtil.getRanking(fighter2, maxFightNumber + 1, allRatingEntries);
         double newFirstRank;
         double newSecondRank;
-        if (!dto.getResult().isEmpty() && !dto.getResult().contains("No contest")) {
-            if (!dto.getResult().contains("Draw")) {
-                fight.setWinner(fighter1);
+        double v1;
+        double v2;
+        if (!dto.getResult().isEmpty() && fight.getResult().isEmpty()) {            //  if fight happened just in this edit
+            if (!dto.getResult().contains("No contest")) {                  //  ratings changing - do ELO recalculation
+                v1 = 1 + Math.pow(10, (secondRank - firstRank) / 400);      // simplified formula
+                v2 = 1 + Math.pow(10, (firstRank - secondRank) / 400);
+
+                if (dto.getResult().contains("Draw")) {                     //  draw case
+                    newFirstRank = firstRank + 200 * (0.5 - 1 / v1);
+                    newSecondRank = secondRank + 200 * (0.5 - 1 / v2);
+                } else {                                                    //  fight has a winner case
+                    fight.setWinner(fighter1);
+                    newFirstRank = firstRank + 200 * (1 - 1 / v1);
+                    newSecondRank = secondRank + 200 * (-1 / v2);
+                }
+                firstRank = newFirstRank;
+                secondRank = newSecondRank;
             }
-            double v1 = 1 + Math.pow(10, (secondRank - firstRank) / 400);     // simplified formula
-            double v2 = 1 + Math.pow(10, (firstRank - secondRank) / 400);
-            newFirstRank = firstRank + 200 * (1 - 1 / v1);
-            newSecondRank = secondRank + 200 * (-1 / v2);
-            firstRank = newFirstRank;                           //  ELO recalculation if there is a winner
-            secondRank = newSecondRank;
+            fight.setFighter1(fighter1);
+            fight.setFighter2(fighter2);
+            Fight saved = fightRepository.save(fight);
+            RatingEntry entry1 = RatingEntry.builder()
+                    .ranking(firstRank)
+                    .fighter(fighter1)
+                    .fight(saved)
+                    .weightClass(weightClass)
+                    .build();
+            RatingEntry entry2 = RatingEntry.builder()
+                    .ranking(secondRank)
+                    .fighter(fighter2)
+                    .fight(saved)
+                    .weightClass(weightClass)
+                    .build();
+            ratingEntryRepository.save(entry1);
+            ratingEntryRepository.save(entry2);
+            fighter1.getRatingEntries().add(entry1);
+            fighter2.getRatingEntries().add(entry2);
+            fighter1.setEloRating(entry1.getRanking());
+            fighter2.setEloRating(entry2.getRanking());
+            fighterRepository.save(fighter1);
+            fighterRepository.save(fighter2);
         }
+
         fight.setFighter1(fighter1);
         fight.setFighter2(fighter2);
         Fight saved = fightRepository.save(fight);
-        RatingEntry entry1 = RatingEntry.builder()
-                .ranking(firstRank)
-                .fighter(fighter1)
-                .fight(saved)
-                .weightClass(weightClass)
-                .build();
-        RatingEntry entry2 = RatingEntry.builder()
-                .ranking(secondRank)
-                .fighter(fighter2)
-                .fight(saved)
-                .weightClass(weightClass)
-                .build();
-        ratingEntryRepository.save(entry1);
-        ratingEntryRepository.save(entry2);
         return toFightDto(saved);
     }
 
@@ -214,13 +231,6 @@ public class TournamentService {
                 .build();
     }
 
-//    public Tournament toEntity(TournamentDto dto) {
-//        return Tournament.builder()
-//                .name(dto.getName())
-//                .location(dto.getLocation())
-//                .date(dto.getDate())
-//                .build();
-//    }
 
     public FightDto toFightDto(Fight entity) {
         return FightDto.builder()
