@@ -23,6 +23,7 @@ public class TournamentService {
     private final FighterRepository fighterRepository;
     private final WeightClassRepository weightClassRepository;
     private final RatingEntryRepository ratingEntryRepository;
+    private final FightUtil fightUtil;
 
     public List<TournamentDto> getAllTournaments() {
         return tournamentRepository.findAll().stream().map(this::toDto).toList();
@@ -65,7 +66,8 @@ public class TournamentService {
                         .result(fightDto.getResult())
                         .date(fightDto.getDate())
                         .sequenceInTotal(++nextSequence)
-                        .uniqueDescription(FightUtil.createUniqueDescription(fighter1.getName(), fighter2.getName(), tournament.getDate()))
+                        .uniqueDescription(fightUtil.createUniqueDescription(fighter1.getName(), fighter2.getName(),
+                                tournament.getDate()))
                         .build();
 
                 fights.add(fight);
@@ -108,7 +110,7 @@ public class TournamentService {
                     .orElseThrow(() -> new ResourceNotFoundException("Fighter2 not found")));
             fight.setWeightClass(weightClassRepository.findByName(fightDto.getWeightClass())
                     .orElseThrow(() -> new ResourceNotFoundException("Weight class not found")));
-            fight.setUniqueDescription(FightUtil.createUniqueDescription(
+            fight.setUniqueDescription(fightUtil.createUniqueDescription(
                     fight.getFighter1().getName(), fight.getFighter2().getName(), fight.getDate()));
             updatedFights.add(fight);
         }
@@ -141,7 +143,8 @@ public class TournamentService {
         fight.setDate(dto.getDate());
         fight.setResult(dto.getResult());
         Integer maxFightNumber = tournamentRepository.findMaxSequenceInTotalByTournamentId(tournamentId);
-        String uniqueDescription = FightUtil.createUniqueDescription(dto.getFighter1(), dto.getFighter2(), tournament.getDate());
+        String uniqueDescription = fightUtil.createUniqueDescription(dto.getFighter1(), dto.getFighter2(),
+                tournament.getDate());
         fight.setUniqueDescription(uniqueDescription);
         fight.setSequenceInTotal(maxFightNumber + 1);
         Fighter fighter1 = fighterRepository.findByName(dto.getFighter1())
@@ -151,8 +154,8 @@ public class TournamentService {
         WeightClass weightClass = weightClassRepository.findByName(dto.getWeightClass())
                 .orElse(weightClassRepository.findByName("NA").orElseThrow(() ->
                         new ResourceNotFoundException("Weightclass not found")));
-        double firstRank = FightUtil.getRanking(fighter1, maxFightNumber + 1, allRatingEntries);
-        double secondRank = FightUtil.getRanking(fighter2, maxFightNumber + 1, allRatingEntries);
+        double firstRank = fightUtil.getRanking(fighter1, maxFightNumber + 1, allRatingEntries);
+        double secondRank = fightUtil.getRanking(fighter2, maxFightNumber + 1, allRatingEntries);
         double newFirstRank;
         double newSecondRank;
         double v1;
