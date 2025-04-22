@@ -37,8 +37,13 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" ng-href="{{isAdmin() ? 'admin.html' : 'access-denied.html'}}">Admin panel</a></li>
-                <li class="nav-item" ng-if="username && role"><a class="nav-link" href="#" ng-click="logout()">Log out</a></li>
-                <li class="nav-item" ng-if="!username || !role"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item" ng-if="!isUnauthorized()">
+                    <a class="nav-link" href="#" ng-click="logout()">Log out</a>
+                </li>
+                <li class="nav-item" ng-if="isUnauthorized()">
+                    <a class="nav-link" href="login.html">Login</a>
+                </li>
+
             </ul>
         </div>
     </div>
@@ -52,21 +57,18 @@
         <tr>
             <th>#</th>
             <th>Fighter</th>
-            <th>Weight Class</th>
             <th>Rating</th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat="fighter in topP4P">
-            <td>{{$index + 1}}</td>
+            <td>{{fighter.rank + 1}}</td>
             <td>{{fighter.name}}</td>
-            <td>{{fighter.weightClass}}</td>
-            <td>{{fighter.rating}}</td>
+            <td>{{fighter.score}}</td>
         </tr>
         </tbody>
     </table>
-
-    <h2 class="section-title">Upcoming Tournaments</h2>
+    <h2 class="section-title">Recent Tournaments</h2>
     <ul class="list-group">
         <li class="list-group-item" ng-repeat="t in upcomingTournaments">
             {{t.name}} — {{t.date}} — {{t.location}}

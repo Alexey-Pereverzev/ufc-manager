@@ -36,8 +36,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" ng-href="{{isAdmin() ? 'admin.html' : 'access-denied.html'}}">Admin panel</a></li>
-                <li class="nav-item" ng-if="username && role"><a class="nav-link" href="#" ng-click="logout()">Log out</a></li>
-                <li class="nav-item" ng-if="!username || !role"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item" ng-if="!isUnauthorized()">
+                    <a class="nav-link" href="#" ng-click="logout()">Log out</a>
+                </li>
+                <li class="nav-item" ng-if="isUnauthorized()">
+                    <a class="nav-link" href="login.html">Login</a>
+                </li>
             </ul>
         </div>
     </div>

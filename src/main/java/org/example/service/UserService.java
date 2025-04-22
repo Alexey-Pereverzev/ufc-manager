@@ -70,9 +70,11 @@ public class UserService {
 
     public void register(UserAuthDto dto) throws InputDataErrorException {
         Optional<User> checkUser = findByUsername(dto.getUsername());
+        System.out.println(2222);
         if (checkUser.isPresent()) {
             throw new UserAlreadyExistsException("Username already in use");
         } else {
+            System.out.println(3333);
             User user = new User();
 
             String encryptedPassword = passwordEncoder.encode(dto.getPassword());
@@ -114,6 +116,7 @@ public class UserService {
 
     public JwtResponse auth(UserAuthDto dto) {
         String username = dto.getUsername();
+        System.out.println(11111);
         User user = findByUsername(username).orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
         if (!passwordEncoder.matches(dto.getPassword(), user.getPassword())) {
             throw new InvalidCredentialsException("Invalid credentials");

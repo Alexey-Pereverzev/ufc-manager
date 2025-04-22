@@ -15,8 +15,7 @@ import java.util.List;
 @Table(name = "tournament")
 public class Tournament {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "tournament_seq")
-    @SequenceGenerator(name = "tournament_seq", sequenceName = "seq_tournament", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false, length = 255)

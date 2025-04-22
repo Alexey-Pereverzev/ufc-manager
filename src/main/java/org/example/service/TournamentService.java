@@ -10,6 +10,7 @@ import org.example.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -120,19 +121,17 @@ public class TournamentService {
         return "Tournament " + saved.getName() + " updated successfully";
     }
 
-
-
-    public String createFight(Long tournamentId, FightDto dto) {
+    public FightDto createFight(Long tournamentId, FightDto dto) {
         Fight fight = new Fight();
         FightDto saved = calculateAndSaveFight(tournamentId, dto, fight);
-        return "Fight '" + saved.getFighter1() + " vs. " + saved.getFighter2() + "' added successfully";
+        return saved;
     }
 
-    public String updateFight(Long tournamentId, Long fightId, FightDto dto) {
+    public FightDto updateFight(Long tournamentId, Long fightId, FightDto dto) {
         Fight fight = fightRepository.findById(fightId).orElseThrow(() ->
                 new ResourceNotFoundException("Fight with id " + fightId + " not found"));
         FightDto saved = calculateAndSaveFight(tournamentId, dto, fight);
-        return "Fight '" + saved.getFighter1() + " vs. " + saved.getFighter2() + "' updated successfully";
+        return saved;
     }
 
     @Transactional
@@ -246,8 +245,12 @@ public class TournamentService {
                 .build();
     }
 
-    public List<TournamentDto> getAll() {
-        return null;
+
+    public List<TournamentDto> findRecentUpTo(LocalDate date) {
+        return tournamentRepository.findByDateBeforeOrderByDateDesc(date)
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 }
 

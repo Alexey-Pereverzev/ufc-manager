@@ -13,8 +13,7 @@ import lombok.*;
 @Builder
 public class RatingEntry {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "rating_entry_seq")
-    @SequenceGenerator(name = "rating_entry_seq", sequenceName = "seq_rating_entry", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "ranking")

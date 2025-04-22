@@ -33,8 +33,12 @@
                 <li class="nav-item"><a class="nav-link" ng-href="{{isManager() || isAdmin() || isGuest() ?
                     'rankings.html' : 'access-denied.html'}}">Rankings</a></li>
                 <li class="nav-item"><a class="nav-link" ng-href="{{isAdmin() ? 'admin.html' : 'access-denied.html'}}">Admin panel</a></li>
-                <li class="nav-item" ng-if="username && role"><a class="nav-link" href="#" ng-click="logout()">Log out</a></li>
-                <li class="nav-item" ng-if="!username || !role"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item" ng-if="!isUnauthorized()">
+                    <a class="nav-link" href="#" ng-click="logout()">Log out</a>
+                </li>
+                <li class="nav-item" ng-if="isUnauthorized()">
+                    <a class="nav-link" href="login.html">Login</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -58,10 +62,10 @@
                 <button class="btn btn-outline-secondary btn-icon" data-bs-toggle="modal" data-bs-target="#editUserModal" ng-click="setEditUser(u)">
                     <i class="bi bi-pencil text-dark opacity-100"></i>
                 </button>
-                <button class="btn btn-outline-danger btn-icon" ng-if="u.status === 'Active'" data-bs-toggle="modal" data-bs-target="#deleteUserModal" ng-click="setDeleteUser(u)">
+                <button class="btn btn-outline-danger btn-icon" ng-if="u.status === 'ACTIVE'" data-bs-toggle="modal" data-bs-target="#deleteUserModal" ng-click="setDeleteUser(u)">
                     <i class="bi bi-trash text-dark opacity-100"></i>
                 </button>
-                <button class="btn btn-outline-success btn-icon" ng-if="u.status === 'Blocked'" ng-click="restoreUser(u)">
+                <button class="btn btn-outline-success btn-icon" ng-if="u.status === 'BLOCKED'" ng-click="restoreUser(u)">
                     <i class="bi bi-arrow-clockwise text-dark opacity-100"></i>
                 </button>
             </td>

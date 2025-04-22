@@ -1,6 +1,7 @@
 package org.example.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.CountryDto;
 import org.example.dto.FighterDto;
 import org.example.entity.Fight;
 import org.example.entity.Fighter;
@@ -48,8 +49,9 @@ public class FighterService {
         fighter.setUfcRecord(dto.getUfcRecord());
         fighter.setMmaRecord(dto.getMmaRecord());
         fighter.setActive("Active".equalsIgnoreCase(dto.getStatus()));
-        if (dto.getCountry() != null) {
-            countryRepository.findByName(dto.getCountry()).ifPresent(fighter::setCountry);
+        if (dto.getCountry() != null && dto.getCountry().getCode() != null) {
+            countryRepository.findByCodeIgnoreCase(dto.getCountry().getCode())
+                    .ifPresent(fighter::setCountry);
         }
         if (dto.getWeightClass() != null) {
             weightClassRepository.findByNameIgnoreCase(dto.getWeightClass())
@@ -79,9 +81,9 @@ public class FighterService {
         String weightClassName = "NA";
         List<RatingEntry> entries = fighter.getRatingEntries();
         if (entries != null && !entries.isEmpty()) {
-            Optional<RatingEntry> latestWithWeightClass = entries.stream()      //  filter by not "NA" weight class
+            Optional<RatingEntry> latestWithWeightClass = entries.stream()
                     .filter(e -> e.getWeightClass() != null && !"NA".equalsIgnoreCase(e.getWeightClass().getName()))
-                    .max(Comparator.comparing(r -> {                            //  the last entry
+                    .max(Comparator.comparing(r -> {
                         Fight fight = r.getFight();
                         return fight != null ? fight.getSequenceInTotal() : 0;
                     }));
@@ -89,9 +91,16 @@ public class FighterService {
                 weightClassName = latestWithWeightClass.get().getWeightClass().getName();
             }
         }
+        CountryDto countryDto = null;
+        if (fighter.getCountry() != null) {
+            countryDto = CountryDto.builder()
+                    .name(fighter.getCountry().getName())
+                    .code(fighter.getCountry().getCode())
+                    .build();
+        }
         return FighterDto.builder()
                 .name(fighter.getName())
-                .country(fighter.getCountry() != null ? fighter.getCountry().getCode() : null)
+                .country(countryDto)
                 .weightClass(weightClassName)
                 .ufcRecord(fighter.getUfcRecord())
                 .mmaRecord(fighter.getMmaRecord())
@@ -105,8 +114,9 @@ public class FighterService {
         fighter.setUfcRecord(dto.getUfcRecord());
         fighter.setMmaRecord(dto.getMmaRecord());
         fighter.setActive("Active".equalsIgnoreCase(dto.getStatus()));
-        if (dto.getCountry() != null) {
-            countryRepository.findByName(dto.getCountry()).ifPresent(fighter::setCountry);
+        if (dto.getCountry() != null && dto.getCountry().getCode() != null) {
+            countryRepository.findByCodeIgnoreCase(dto.getCountry().getCode())
+                    .ifPresent(fighter::setCountry);
         }
         return fighter;
     }

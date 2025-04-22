@@ -40,12 +40,25 @@ public class SecurityConfig {
                         .requestMatchers("/api/tournaments/**").permitAll()
                         .requestMatchers("/api/rankings/**").permitAll()
                         .requestMatchers("/api/fighters/**")
-                            .hasAnyAuthority("ROLE_GUEST", "ROLE_MANAGER", "ROLE_ADMIN")
+                            .hasAnyAuthority("GUEST", "MANAGER", "ADMIN")
                         .requestMatchers("/api/weight-classes/**")
-                            .hasAnyAuthority("ROLE_GUEST", "ROLE_MANAGER", "ROLE_ADMIN")
-                        .requestMatchers("/index.html", "/register.html", "/admin.html", "/access-denied.html",
-                                "/event-list.html", "fighters.html", "/login.html", "/rankings.html",
-                                "/*.css", "/*.js", "/*.png").permitAll()
+                            .hasAnyAuthority("GUEST", "MANAGER", "ADMIN")
+                        .requestMatchers("/api/countries/**")
+                            .hasAnyAuthority("GUEST", "MANAGER", "ADMIN")
+                        .requestMatchers(
+                                "/index.html",
+                                "/login.html",
+                                "/admin.html",
+                                "/register.html",
+                                "/access-denied.html",
+                                "/fighters.html",
+                                "/event-list.html",
+                                "/rankings.html",
+                                "/css/**",
+                                "/js/**",
+                                "/images/**",
+                                "/favicon.ico"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .csrf(CsrfConfigurer::disable)

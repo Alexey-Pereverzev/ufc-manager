@@ -13,8 +13,7 @@ import java.util.List;
 @Builder
 public class Fighter {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fighter_seq")
-    @SequenceGenerator(name = "fighter_seq", sequenceName = "seq_fighter", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")

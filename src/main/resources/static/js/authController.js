@@ -1,4 +1,4 @@
-angular.module('ufcManager', ['ngStorage'])
+angular.module('ufcManager')
   .controller('authController', function($scope, $http, $localStorage, authService) {
 
     $scope.user = {};
@@ -13,16 +13,35 @@ angular.module('ufcManager', ['ngStorage'])
 
 
     $scope.login = function () {
-      $http.post('/api/users/login', $scope.user)
-        .then(function (response) {
-          $localStorage.ufcUser = response.data;
-          $http.defaults.headers.common.Authorization = 'Bearer ' + response.data.token;
-          window.location.href = 'index.html';
-        })
-        .catch(function (error) {
-          alert('Login failed: ' + (error.data?.message || 'Unknown error'));
-        });
+      $http.post('/api/users/login', {
+        username: $scope.user.username,
+        password: $scope.user.password
+      })
+      .then(function (response) {
+        const user = response.data;
+        authService.saveUser(user, $scope);
+        window.location.href = 'index.html'; // <<== вот это обязательно
+      })
+      .catch(function (error) {
+        console.error("Login failed:", error);
+        alert("Login failed. Please check your credentials.");
+      });
     };
+
+//          // -- LOGIN ------------------------------------------------------------
+//          $scope.login = function () {
+//            console.log('LOGIN submit', $scope.user);      // <- увидеть в консоли
+//            $http.post('/api/users/login', {
+//                username: $scope.user.username,
+//                password: $scope.user.password
+//            }).then(function (resp) {
+//                authService.saveUser(resp.data, $scope);
+//                window.location.href = 'index.html';
+//            }).catch(function (err) {
+//                console.error('Login failed', err);
+//                alert('Login failed. Check credentials');
+//            });
+//          };
 
 
 

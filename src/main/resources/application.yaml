@@ -23,7 +23,7 @@ spring:
 server:
   port: 8080
   servlet:
-    context-path: /ufc-manager
+    context-path: /
 jwt:
   lifetime: 36000000
   secret: Xo*gb@LKydhZz1xylQ8E%rnXWWKjh7s@or}#D{?~iAOO#e~6gKW7|{SGdMx|34YHOOEX{r?@mjXB%~Qi

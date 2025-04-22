@@ -6,6 +6,7 @@ import org.example.dto.UserAuthDto;
 import org.example.dto.UserDto;
 import org.example.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,11 +19,13 @@ public class UserController {
 
     private final UserService userService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}/role")
     public ResponseEntity<?> updateUserRole(@PathVariable Long id, @RequestBody Map<String, String> role) {
         String roleUpdate = role.get("role");
@@ -30,6 +33,7 @@ public class UserController {
         return ResponseEntity.ok(new StringResponse("Role of user '" + username + "' successfully updated"));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateUserStatus(@PathVariable Long id, @RequestBody Map<String, String> status) {
         String statusUpdate = status.get("status");

@@ -13,19 +13,11 @@ angular.module('ufcManager')
     };
 
 
-//    $scope.username = 'admin'; // текущий пользователь
-//    $scope.role = 'ADMIN';     // роль текущего пользователя
-//
-//    $scope.isAdmin = () => $scope.role === 'ADMIN';
-//    $scope.isManager = () => $scope.role === 'MANAGER';
-//    $scope.isGuest = () => !$scope.role || $scope.role === 'GUEST';
-//
-//    // Моки пользователей
-//    $scope.users = [
-//      { id: 1, username: 'john_doe', role: 'GUEST', status: 'Active' },
-//      { id: 2, username: 'anna_admin', role: 'ADMIN', status: 'Active' },
-//      { id: 3, username: 'mike_manager', role: 'MANAGER', status: 'Blocked' }
-//    ];
+    $scope.isUnauthorized = () => authService.isUnauthorized();
+    $scope.isGuest        = () => $scope.role === 'GUEST';
+    $scope.isManager      = () => $scope.role === 'MANAGER';
+    $scope.isAdmin        = () => $scope.role === 'ADMIN';
+
 
 
 
@@ -59,8 +51,8 @@ angular.module('ufcManager')
     $scope.deleteUserConfirmed = function() {
       const user = $scope.getUserById($scope.selectedUser.id);
       if (user) {
-        user.status = 'Blocked';
-        $http.put(`/api/users/${user.id}/status`, { status: 'Blocked' })
+        user.status = 'BLOCKED';
+        $http.put(`/api/users/${user.id}/status`, { status: 'BLOCKED' })
           .then(response => console.log('User blocked successfully'))
           .catch(error => console.error('Blocking failed:', error));
       }
@@ -69,8 +61,8 @@ angular.module('ufcManager')
     $scope.restoreUser = function(user) {
       const target = $scope.getUserById(user.id);
       if (target) {
-        target.status = 'Active';
-        $http.put(`/api/users/${user.id}/status`, { status: 'Active' })
+        target.status = 'ACTIVE';
+        $http.put(`/api/users/${user.id}/status`, { status: 'ACTIVE' })
           .then(response => console.log('User restored'))
           .catch(error => console.error('Restore failed:', error));
       }
@@ -86,3 +78,15 @@ angular.module('ufcManager')
     };
 
   });
+
+
+//    $scope.username = 'admin'; // текущий пользователь
+//    $scope.role = 'ADMIN';     // роль текущего пользователя
+//
+//
+//    // Моки пользователей
+//    $scope.users = [
+//      { id: 1, username: 'john_doe', role: 'GUEST', status: 'Active' },
+//      { id: 2, username: 'anna_admin', role: 'ADMIN', status: 'Active' },
+//      { id: 3, username: 'mike_manager', role: 'MANAGER', status: 'Blocked' }
+//    ];

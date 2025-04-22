@@ -38,8 +38,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" ng-href="{{isAdmin() ? 'admin.html' : 'access-denied.html'}}">Admin panel</a></li>
-                <li class="nav-item" ng-if="username && role"><a class="nav-link" href="#" ng-click="logout()">Log out</a></li>
-                <li class="nav-item" ng-if="!username || !role"><a class="nav-link" href="login.html">Login</a></li>
+                <li class="nav-item" ng-if="!isUnauthorized()">
+                    <a class="nav-link" href="#" ng-click="logout()">Log out</a>
+                </li>
+                <li class="nav-item" ng-if="isUnauthorized()">
+                    <a class="nav-link" href="login.html">Login</a>
+                </li>
             </ul>
         </div>
     </div>
@@ -51,7 +55,8 @@
         <h4 class="mb-0 mt-4">Rankings</h4>
         <select class="form-select w-auto"
                 ng-model="selectedClass"
-                ng-options="w for w in weightClasses">
+                ng-options="w for w in weightClasses"
+                ng-change="selectWeightClass(selectedClass)">
         </select>
     </div>
 

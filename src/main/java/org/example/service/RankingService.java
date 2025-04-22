@@ -48,6 +48,7 @@ public class RankingService {
         Set<RatingEntry> allEntries = new HashSet<>(ratingEntryRepository.findAll());
         List<Fighter> allFighters = fighterRepository.findAll();
         List<Fighter> filtered = allFighters.stream()
+                .filter(f -> f.isActive()) // только активные
                 .filter(f -> {
                     WeightClass wc = fightUtil.getWeightClass(f, sequenceInTotal, allEntries);
                     return wc != null && categoryNumbers.contains(wc.getNumber());
@@ -56,11 +57,13 @@ public class RankingService {
                 .toList();
         AtomicInteger counter = new AtomicInteger(0);
         return filtered.stream()
-                .map(this::getRankingForFighter)
-                .peek(dto -> dto.setRank(counter.getAndIncrement()))
-                .collect(Collectors.toList());
+                .map(f -> RankingDto.builder()
+                        .name(f.getName())
+                        .score(Math.round(f.getEloRating() * 100.0) / 100.0) // округление
+                        .rank(counter.getAndIncrement())
+                        .build())
+                .toList();
     }
-
 
 
     private RankingDto getRankingForFighter(Fighter fighter) {

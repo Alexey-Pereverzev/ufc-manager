@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @Data
 public class AppError {
     private String code;
-    private String value;
+    private String message;
 }

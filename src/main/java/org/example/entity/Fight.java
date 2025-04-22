@@ -14,8 +14,7 @@ import java.util.List;
 @Builder
 public class Fight {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "fight_seq")
-    @SequenceGenerator(name = "fight_seq", sequenceName = "seq_fight", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @OneToMany(mappedBy = "fight")

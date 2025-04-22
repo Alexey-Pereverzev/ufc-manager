@@ -11,18 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/rankings")
 @RequiredArgsConstructor
 public class RankingController {
 
     private final RankingService rankingService;
 
-    @GetMapping("/weight-classes")
-    public List<String> getAllWeightClassNames() {
-        return rankingService.getAllWeightClassNames();
-    }
 
-    @GetMapping("/rankings")
+    @GetMapping
     public List<RankingDto> getRankings(@RequestParam("category") String category) {
         return rankingService.getRankingsForCategory(category);
     }

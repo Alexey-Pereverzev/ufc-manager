@@ -11,9 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class FighterDto {
     private String name;
-    private String country;
+    private CountryDto country;
     private String weightClass;
     private String ufcRecord;
     private String mmaRecord;
-    private String status; // "Active" or "Released"
+    private String status; // Active | Released
 }

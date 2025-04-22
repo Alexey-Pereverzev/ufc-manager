@@ -15,8 +15,7 @@ import java.util.List;
 @Table(name = "weight_class")
 public class WeightClass {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "weight_class_seq")
-    @SequenceGenerator(name = "weight_class_seq", sequenceName = "seq_weight_class", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)

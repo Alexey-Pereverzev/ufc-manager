@@ -12,8 +12,8 @@ public interface FighterRepository extends JpaRepository<Fighter, Long> {
 
     Optional<Fighter> findByName(String nameFirst);
 
-    List<Fighter> findByWeightClassNumber(int number);
-
-    List<Fighter> findByWeightClassNumberIn(List<Integer> integers);
+//    List<Fighter> findByWeightClassNumber(int number);
+//
+//    List<Fighter> findByWeightClassNumberIn(List<Integer> integers);
 
 }
