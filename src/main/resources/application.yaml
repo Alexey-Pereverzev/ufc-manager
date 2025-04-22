@@ -1,0 +1,36 @@
+spring:
+  aot:
+    enabled: false
+  application:
+    name: ufc-manager
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/ufc_db
+    username: postgres
+    password: 123
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        generate_statistics: false
+  jackson:
+    serialization:
+      indent_output: true
+server:
+  port: 8080
+  servlet:
+    context-path: /
+jwt:
+  lifetime: 36000000
+  secret: Xo*gb@LKydhZz1xylQ8E%rnXWWKjh7s@or}#D{?~iAOO#e~6gKW7|{SGdMx|34YHOOEX{r?@mjXB%~Qi
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web: DEBUG
+
